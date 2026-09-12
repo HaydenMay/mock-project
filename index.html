@@ -1,41 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Saturday Scout — Pick'em Demo</title>
 
 <style>
+
 :root {
-  --bg: #0B1020;        /* Midnight navy */
-  --panel: #141B2D;     /* Raised cards */
-  --line: #29344D;      /* Borders */
-  --text: #F7F8FC;
-  --muted: #98A4BA;
+  --bg:#0B1020;
+  --panel:#141B2D;
+  --line:#29344D;
+  --text:#F7F8FC;
+  --muted:#98A4BA;
 
-  --primary: #4F8CFF;   /* Scout blue */
-  --primary2: #2563EB;  /* Deep blue */
+  --primary:#4F8CFF;
+  --primary2:#2563EB;
 
-  --gold: #F4B942;      /* Featured / Game of Week */
+  --gold:#F4B942;
 }
 
-* { box-sizing:border-box; }
+* {
+  box-sizing:border-box;
+}
 
 body {
   margin:0;
+
   background:
-    radial-gradient(circle at 20% 0%,rgba(88,200,121,.08),transparent 28%),
-    linear-gradient(180deg,#0d1215,#0a0f12);
+    radial-gradient(
+      circle at 20% 0%,
+      rgba(79,140,255,.10),
+      transparent 28%
+    ),
+    linear-gradient(
+      180deg,
+      var(--bg),
+      #070B16
+    );
+
   color:var(--text);
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
   min-height:100vh;
 }
+
+/* MAIN LAYOUT */
 
 .shell {
   max-width:1050px;
   margin:auto;
   padding:24px 18px 60px;
 }
+
+
+/* TOP NAV */
 
 .topbar {
   display:flex;
@@ -49,18 +76,32 @@ body {
   letter-spacing:.08em;
 }
 
-.brand span { color:var(--green); }
+.brand span {
+  color:var(--primary);
+}
 
 .demo {
   color:var(--muted);
   font-size:14px;
 }
 
+
+/* SHARED CARD */
+
 .card {
-  background:linear-gradient(180deg,#1b272d,#141e23);
+  background:
+    linear-gradient(
+      180deg,
+      #182138,
+      var(--panel)
+    );
+
   border:1px solid var(--line);
   border-radius:20px;
 }
+
+
+/* HERO */
 
 .hero {
   padding:25px;
@@ -68,7 +109,8 @@ body {
 }
 
 .eyebrow {
-  color:var(--green);
+  color:var(--primary);
+
   font-size:12px;
   font-weight:900;
   letter-spacing:.14em;
@@ -85,18 +127,27 @@ h1 {
   line-height:1.5;
 }
 
+
+/* PROGRESS */
+
 .progress-row {
   display:flex;
   justify-content:space-between;
+
   margin-top:20px;
+
   color:var(--muted);
   font-size:13px;
 }
 
 .bar {
   height:10px;
-  background:#10181c;
+
+  background:#0B1120;
+
+  border:1px solid var(--line);
   border-radius:999px;
+
   overflow:hidden;
   margin-top:7px;
 }
@@ -104,9 +155,19 @@ h1 {
 .bar div {
   height:100%;
   width:0;
-  background:linear-gradient(90deg,var(--green2),var(--green));
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--primary2),
+      var(--primary)
+    );
+
   transition:width .35s ease;
 }
+
+
+/* GAME LIST */
 
 .games {
   display:grid;
@@ -115,12 +176,19 @@ h1 {
 
 .game {
   padding:17px;
-  transition:.2s;
+
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease,
+    transform .2s ease;
 }
 
 .game.picked {
-  border-color:var(--green);
-  box-shadow:0 10px 30px rgba(30,150,73,.12);
+  border-color:var(--primary);
+
+  box-shadow:
+    0 10px 30px
+    rgba(79,140,255,.14);
 }
 
 .game-head {
@@ -135,11 +203,16 @@ h1 {
   font-weight:800;
 }
 
+
+/* SCOUT BADGES */
+
 .badge {
   font-size:11px;
   font-weight:900;
-  background:var(--green);
-  color:#0d1710;
+
+  background:var(--primary);
+  color:#07101F;
+
   padding:6px 9px;
   border-radius:999px;
 }
@@ -149,34 +222,67 @@ h1 {
   color:#191400;
 }
 
+
+/* MATCHUPS */
+
 .matchup {
   display:grid;
-  grid-template-columns:1fr auto 1fr;
+
+  grid-template-columns:
+    1fr auto 1fr;
+
   gap:10px;
   margin-top:12px;
 }
 
 .team {
-  border:1px solid #34454d;
-  background:#10181c;
-  color:white;
+  border:1px solid #35415D;
+
+  background:#0E1526;
+  color:var(--text);
+
   border-radius:15px;
+
   padding:16px;
+
   cursor:pointer;
   text-align:left;
-  transition:.18s;
+
+  transition:
+    border-color .18s ease,
+    background .18s ease,
+    transform .18s ease;
 }
 
 .team:hover {
-  border-color:#53717e;
+  border-color:#63789E;
+  background:#131D32;
+
   transform:translateY(-2px);
 }
 
+
+/* SELECTED TEAM */
+
 .team.selected {
-  background:linear-gradient(180deg,#204f31,#173c25);
-  border-color:var(--green);
+  background:
+    linear-gradient(
+      180deg,
+      #1D407A,
+      #152F5D
+    );
+
+  border-color:var(--primary);
+
+  box-shadow:
+    inset 0 0 0 1px
+    rgba(79,140,255,.15);
+
   transform:scale(1.015);
 }
+
+
+/* TEAM INFO */
 
 .loc {
   font-size:11px;
@@ -199,15 +305,22 @@ h1 {
 .vs {
   display:grid;
   place-items:center;
-  color:#6f8088;
+
+  color:#71809B;
+
   font-size:11px;
   font-weight:900;
 }
 
+
+/* SCOUT EXPLANATION */
+
 .reason {
   color:var(--muted);
+
   font-size:13px;
   line-height:1.45;
+
   margin-top:12px;
 }
 
@@ -215,16 +328,28 @@ h1 {
   color:var(--gold);
 }
 
+
+/* STICKY PICK BAR */
+
 .footer {
   position:sticky;
   bottom:12px;
+
   margin-top:18px;
   padding:14px;
+
   display:flex;
   justify-content:space-between;
   align-items:center;
-  background:rgba(17,25,29,.94);
+
+  background:
+    rgba(14,21,38,.94);
+
   backdrop-filter:blur(14px);
+
+  box-shadow:
+    0 10px 35px
+    rgba(0,0,0,.28);
 }
 
 .status {
@@ -232,38 +357,75 @@ h1 {
 }
 
 .status strong {
-  color:white;
+  color:var(--text);
 }
+
+
+/* SUBMIT BUTTON */
 
 .submit {
   border:0;
   border-radius:13px;
-  background:var(--green);
-  color:#08150d;
+
+  background:var(--primary);
+  color:#07101F;
+
   font-weight:900;
+
   padding:13px 20px;
+
   cursor:pointer;
+
+  transition:
+    transform .18s ease,
+    filter .18s ease;
+}
+
+.submit:not(:disabled):hover {
+  transform:translateY(-1px);
+  filter:brightness(1.08);
 }
 
 .submit:disabled {
-  background:#39464c;
-  color:#89959b;
+  background:#374158;
+  color:#818CA2;
+
   cursor:not-allowed;
 }
 
+
+/* SUCCESS TOAST */
+
 .toast {
   position:fixed;
+
   right:20px;
   bottom:20px;
-  background:#143821;
-  border:1px solid var(--green);
-  color:#dcffe6;
+
+  background:#132A52;
+
+  border:
+    1px solid
+    var(--primary);
+
+  color:#EAF2FF;
+
   padding:14px 18px;
+
   border-radius:13px;
 
+  box-shadow:
+    0 12px 35px
+    rgba(0,0,0,.3);
+
   opacity:0;
-  transform:translateY(10px);
+
+  transform:
+    translateY(10px);
+
   transition:.25s;
+
+  pointer-events:none;
 }
 
 .toast.show {
@@ -271,9 +433,14 @@ h1 {
   transform:none;
 }
 
+
+/* MOBILE */
+
 @media(max-width:700px) {
 
-  h1 { font-size:32px; }
+  h1 {
+    font-size:32px;
+  }
 
   .matchup {
     grid-template-columns:1fr;
@@ -285,369 +452,624 @@ h1 {
 
   .footer {
     flex-direction:column;
+
     gap:10px;
+
     align-items:stretch;
   }
 
   .submit {
     width:100%;
   }
+
 }
+
 </style>
+
 </head>
+
 
 <body>
 
+
 <div class="shell">
 
-  <div class="topbar">
-    <div class="brand">
-      SATURDAY <span>SCOUT</span>
-    </div>
 
-    <div class="demo">
-      Interactive Demo • Week 5
-    </div>
+<!-- TOP BAR -->
+
+<div class="topbar">
+
+  <div class="brand">
+    SATURDAY <span>SCOUT</span>
+  </div>
+
+  <div class="demo">
+    Interactive Demo • Week 5
+  </div>
+
+</div>
+
+
+
+<!-- HERO -->
+
+<section class="card hero">
+
+  <div class="eyebrow">
+    SCOUT FEATURED 10
+  </div>
+
+  <h1>
+    Pick the winners.<br>
+    Saturday settles it.
+  </h1>
+
+  <div class="sub">
+
+    Scout analyzed the college football slate
+    and selected ten games worth watching.
+
+    Pick one winner from every matchup.
+    Each real pick would lock individually
+    at kickoff.
+
   </div>
 
 
-  <section class="card hero">
+  <div class="progress-row">
 
-    <div class="eyebrow">
-      SCOUT FEATURED 10
+    <span>
+      Your Picks
+    </span>
+
+    <span id="progressLabel">
+      0 / 10 selected
+    </span>
+
+  </div>
+
+
+  <div class="bar">
+
+    <div id="progressBar">
     </div>
 
-    <h1>
-      Pick the winners.<br>
-      Saturday settles it.
-    </h1>
+  </div>
 
-    <div class="sub">
-      Scout analyzed the college football slate and selected
-      ten games worth watching. Pick one winner from every matchup.
-      Each real pick would lock individually at kickoff.
-    </div>
+</section>
 
 
-    <div class="progress-row">
-      <span>Your Picks</span>
-      <span id="progressLabel">0 / 10 selected</span>
-    </div>
 
-    <div class="bar">
-      <div id="progressBar"></div>
-    </div>
+<!-- GAMES -->
 
-  </section>
+<main
+  class="games"
+  id="games">
+</main>
 
 
-  <main class="games" id="games"></main>
+
+<!-- PICK STATUS -->
+
+<section class="card footer">
+
+  <div class="status">
+
+    <strong id="statusCount">
+      0 of 10
+    </strong>
+
+    picks completed
+
+  </div>
 
 
-  <section class="card footer">
+  <button
+    id="submitBtn"
+    class="submit"
+    disabled>
 
-    <div class="status">
-      <strong id="statusCount">0 of 10</strong>
-      picks completed
-    </div>
+    Submit Weekly Picks
 
-    <button
-      id="submitBtn"
-      class="submit"
-      disabled>
-      Submit Weekly Picks
-    </button>
+  </button>
 
-  </section>
+</section>
+
 
 </div>
 
 
-<div class="toast" id="toast">
-  ✓ Picks saved. Good luck Saturday.
+
+<!-- SUCCESS MESSAGE -->
+
+<div
+  class="toast"
+  id="toast">
+
+  ✓ Picks saved.
+  Good luck Saturday.
+
 </div>
+
 
 
 <script>
 
+
+/*
+  MOCK SCOUT DATA
+
+  Eventually this array would be replaced
+  by the weekly Scout dataset generated
+  from our backend.
+*/
+
 const games = [
 
-{
-tag:"Game of the Week",
-gold:true,
-a:"#4 Texas",
-ar:"4–0",
-b:"#7 Georgia",
-br:"3–1",
-reason:"Two playoff contenders with elite defenses and major conference implications."
-},
+  {
 
-{
-tag:"Featured",
-a:"#12 Alabama",
-ar:"3–1",
-b:"LSU",
-br:"4–0",
-reason:"A high-leverage SEC matchup with a genuine upset profile."
-},
+    tag:"Game of the Week",
+    gold:true,
 
-{
-tag:"Player Watch",
-a:"Arizona State",
-ar:"3–1",
-b:"#10 Texas A&M",
-br:"4–0",
-reason:"Scout flagged multiple NFL-caliber prospects and an interesting pace matchup."
-},
+    a:"#4 Texas",
+    ar:"4–0",
 
-{
-tag:"Rivalry",
-a:"Iowa State",
-ar:"3–1",
-b:"Iowa",
-br:"3–1",
-reason:"A rivalry game with a history of staying close into the fourth quarter."
-},
+    b:"#7 Georgia",
+    br:"3–1",
 
-{
-tag:"Featured",
-a:"#18 Michigan",
-ar:"3–1",
-b:"Wisconsin",
-br:"3–1",
-reason:"Physical styles, similar records, and a matchup that could swing late."
-},
+    reason:
+      "Two playoff contenders with elite defenses and major conference implications."
 
-{
-tag:"Upset Watch",
-a:"#21 Oregon",
-ar:"4–0",
-b:"USC",
-br:"3–1",
-reason:"USC's offense creates enough volatility to make the favorite sweat."
-},
+  },
 
-{
-tag:"Featured",
-a:"Utah",
-ar:"3–1",
-b:"#15 Kansas State",
-br:"4–0",
-reason:"Two disciplined teams with contrasting offensive strengths."
-},
+  {
 
-{
-tag:"Player Watch",
-a:"Clemson",
-ar:"2–2",
-b:"#17 Miami",
-br:"4–0",
-reason:"Several draft-watch players plus a secondary matchup Scout likes."
-},
+    tag:"Featured",
 
-{
-tag:"Conference",
-a:"TCU",
-ar:"3–1",
-b:"Baylor",
-br:"3–1",
-reason:"A competitive conference game with very little separating the teams."
-},
+    a:"#12 Alabama",
+    ar:"3–1",
 
-{
-tag:"Late Window",
-a:"Washington",
-ar:"3–1",
-b:"UCLA",
-br:"2–2",
-reason:"Scout's best late-window option if you want one more game on the calendar."
-}
+    b:"LSU",
+    br:"4–0",
+
+    reason:
+      "A high-leverage SEC matchup with a genuine upset profile."
+
+  },
+
+  {
+
+    tag:"Player Watch",
+
+    a:"Arizona State",
+    ar:"3–1",
+
+    b:"#10 Texas A&M",
+    br:"4–0",
+
+    reason:
+      "Scout flagged multiple NFL-caliber prospects and an interesting pace matchup."
+
+  },
+
+  {
+
+    tag:"Rivalry",
+
+    a:"Iowa State",
+    ar:"3–1",
+
+    b:"Iowa",
+    br:"3–1",
+
+    reason:
+      "A rivalry game with a history of staying close into the fourth quarter."
+
+  },
+
+  {
+
+    tag:"Featured",
+
+    a:"#18 Michigan",
+    ar:"3–1",
+
+    b:"Wisconsin",
+    br:"3–1",
+
+    reason:
+      "Physical styles, similar records, and a matchup that could swing late."
+
+  },
+
+  {
+
+    tag:"Upset Watch",
+
+    a:"#21 Oregon",
+    ar:"4–0",
+
+    b:"USC",
+    br:"3–1",
+
+    reason:
+      "USC's offense creates enough volatility to make the favorite sweat."
+
+  },
+
+  {
+
+    tag:"Featured",
+
+    a:"Utah",
+    ar:"3–1",
+
+    b:"#15 Kansas State",
+    br:"4–0",
+
+    reason:
+      "Two disciplined teams with contrasting offensive strengths."
+
+  },
+
+  {
+
+    tag:"Player Watch",
+
+    a:"Clemson",
+    ar:"2–2",
+
+    b:"#17 Miami",
+    br:"4–0",
+
+    reason:
+      "Several draft-watch players plus a secondary matchup Scout likes."
+
+  },
+
+  {
+
+    tag:"Conference",
+
+    a:"TCU",
+    ar:"3–1",
+
+    b:"Baylor",
+    br:"3–1",
+
+    reason:
+      "A competitive conference game with very little separating the teams."
+
+  },
+
+  {
+
+    tag:"Late Window",
+
+    a:"Washington",
+    ar:"3–1",
+
+    b:"UCLA",
+    br:"2–2",
+
+    reason:
+      "Scout's best late-window option if you want one more game on the calendar."
+
+  }
 
 ];
 
 
+
+/*
+  USER'S CURRENT PICKS
+*/
+
 const picks = {};
 
+
+
+/*
+  PAGE ELEMENTS
+*/
+
 const gamesEl =
-document.getElementById("games");
+  document.getElementById("games");
 
 const progressBar =
-document.getElementById("progressBar");
+  document.getElementById("progressBar");
 
 const progressLabel =
-document.getElementById("progressLabel");
+  document.getElementById("progressLabel");
 
 const statusCount =
-document.getElementById("statusCount");
+  document.getElementById("statusCount");
 
 const submitBtn =
-document.getElementById("submitBtn");
+  document.getElementById("submitBtn");
 
 const toast =
-document.getElementById("toast");
+  document.getElementById("toast");
 
+
+
+/*
+  RENDER PICK'EM
+*/
 
 function render() {
 
-gamesEl.innerHTML =
-games.map((game,index) => `
 
-<section class="card game ${picks[index] ? "picked" : ""}">
+  gamesEl.innerHTML =
 
-<div class="game-head">
-
-<div class="rank">
-Scout #${index + 1}
-${picks[index] ? " • ✓ PICKED" : ""}
-</div>
-
-<div class="badge ${game.gold ? "gold" : ""}">
-${game.tag}
-</div>
-
-</div>
+    games.map(
+      (game,index) => `
 
 
-<div class="matchup">
+<section
+  class="card game
+  ${picks[index] ? "picked" : ""}">
 
 
-<button
-class="team ${picks[index] === "a" ? "selected" : ""}"
-data-game="${index}"
-data-team="a">
-
-<div class="loc">AWAY</div>
-
-<div class="name">
-${game.a}
-</div>
-
-<div class="record">
-${game.ar}
-</div>
-
-</button>
+  <div class="game-head">
 
 
-<div class="vs">
-VS
-</div>
+    <div class="rank">
+
+      Scout #${index + 1}
+
+      ${picks[index]
+        ? " • ✓ PICKED"
+        : ""}
+
+    </div>
 
 
-<button
-class="team ${picks[index] === "b" ? "selected" : ""}"
-data-game="${index}"
-data-team="b">
+    <div
+      class="badge
+      ${game.gold
+        ? "gold"
+        : ""}">
 
-<div class="loc">HOME</div>
+      ${game.tag}
 
-<div class="name">
-${game.b}
-</div>
-
-<div class="record">
-${game.br}
-</div>
-
-</button>
+    </div>
 
 
-</div>
+  </div>
 
 
-<div class="reason">
 
-<strong>
-WHY SCOUT PICKED IT:
-</strong>
+  <div class="matchup">
 
-${game.reason}
 
-</div>
+    <!-- AWAY TEAM -->
+
+    <button
+
+      class="
+        team
+        ${picks[index] === "a"
+          ? "selected"
+          : ""}
+      "
+
+      data-game="${index}"
+      data-team="a">
+
+
+      <div class="loc">
+        AWAY
+      </div>
+
+
+      <div class="name">
+        ${game.a}
+      </div>
+
+
+      <div class="record">
+        ${game.ar}
+      </div>
+
+
+    </button>
+
+
+
+    <div class="vs">
+      VS
+    </div>
+
+
+
+    <!-- HOME TEAM -->
+
+    <button
+
+      class="
+        team
+        ${picks[index] === "b"
+          ? "selected"
+          : ""}
+      "
+
+      data-game="${index}"
+      data-team="b">
+
+
+      <div class="loc">
+        HOME
+      </div>
+
+
+      <div class="name">
+        ${game.b}
+      </div>
+
+
+      <div class="record">
+        ${game.br}
+      </div>
+
+
+    </button>
+
+
+  </div>
+
+
+
+  <div class="reason">
+
+    <strong>
+      WHY SCOUT PICKED IT:
+    </strong>
+
+    ${game.reason}
+
+  </div>
 
 
 </section>
 
-`).join("");
+
+`
 
 
-document
-.querySelectorAll(".team")
-.forEach(button => {
-
-button.addEventListener("click", () => {
-
-const game =
-button.dataset.game;
-
-const team =
-button.dataset.team;
-
-picks[game] = team;
-
-render();
-
-});
-
-});
+    ).join("");
 
 
-const count =
-Object.keys(picks).length;
+
+  /*
+    PICK BUTTON EVENTS
+  */
+
+  document
+    .querySelectorAll(".team")
+    .forEach(button => {
 
 
-progressBar.style.width =
-(count * 10) + "%";
+      button.addEventListener(
+        "click",
+        () => {
 
 
-progressLabel.textContent =
-`${count} / 10 selected`;
+          const game =
+            button.dataset.game;
 
 
-statusCount.textContent =
-`${count} of 10`;
+          const team =
+            button.dataset.team;
 
 
-submitBtn.disabled =
-count !== 10;
+          picks[game] =
+            team;
+
+
+          render();
+
+
+        }
+      );
+
+
+    });
+
+
+
+  /*
+    UPDATE PROGRESS
+  */
+
+  const count =
+    Object.keys(picks).length;
+
+
+  progressBar.style.width =
+    (count * 10) + "%";
+
+
+  progressLabel.textContent =
+    `${count} / 10 selected`;
+
+
+  statusCount.textContent =
+    `${count} of 10`;
+
+
+  submitBtn.disabled =
+    count !== 10;
+
 
 }
 
 
+
+/*
+  SUBMIT PICKS
+*/
+
 submitBtn.addEventListener(
-"click",
-() => {
-
-submitBtn.textContent =
-"Picks Submitted ✓";
-
-submitBtn.disabled = true;
+  "click",
+  () => {
 
 
-document
-.querySelectorAll(".team")
-.forEach(button => {
-
-button.disabled = true;
-
-});
+    submitBtn.textContent =
+      "Picks Submitted ✓";
 
 
-toast.classList.add("show");
+    submitBtn.disabled =
+      true;
 
 
-setTimeout(() => {
+    document
+      .querySelectorAll(".team")
+      .forEach(button => {
 
-toast.classList.remove("show");
+        button.disabled =
+          true;
 
-},2600);
+      });
 
-});
 
+
+    /*
+      SHOW SUCCESS MESSAGE
+    */
+
+    toast
+      .classList
+      .add("show");
+
+
+    setTimeout(
+      () => {
+
+        toast
+          .classList
+          .remove("show");
+
+      },
+      2600
+    );
+
+
+  }
+);
+
+
+
+/*
+  INITIAL PAGE RENDER
+*/
 
 render();
 
+
 </script>
 
+
 </body>
+
 </html>
