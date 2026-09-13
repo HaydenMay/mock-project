@@ -558,6 +558,8 @@ a {
   box-shadow:
     0 12px 35px
     rgba(0,0,0,.32);
+
+  z-index:1000;
 }
 
 .toast.show {
@@ -657,7 +659,6 @@ a {
 
 
 <body>
-
 
 <div class="shell">
 
@@ -997,9 +998,6 @@ a {
 
 /*
   MOCK WEEKLY SCOUT DATA
-
-  Eventually this becomes one structured
-  weekly dataset saved by the backend.
 */
 
 const games = [
@@ -1178,7 +1176,6 @@ const games = [
 ];
 
 
-
 const gamesEl =
   document.getElementById("games");
 
@@ -1188,7 +1185,7 @@ const toast =
 
 
 /*
-  BUILD FEATURED GAME CARDS
+  RENDER FEATURED GAMES
 */
 
 function renderGames() {
@@ -1196,7 +1193,6 @@ function renderGames() {
   gamesEl.innerHTML =
 
     games.map(game => `
-
 
 <section class="card game">
 
@@ -1284,7 +1280,6 @@ function renderGames() {
 
 </section>
 
-
     `).join("");
 
 }
@@ -1292,7 +1287,7 @@ function renderGames() {
 
 
 /*
-  MOCK EMAIL SIGNUP
+  EMAIL SIGNUP SIMULATION
 */
 
 document
@@ -1303,18 +1298,36 @@ document
 
       event.preventDefault();
 
+      const emailInput =
+        document.getElementById("emailInput");
+
       const email =
-        document
-          .getElementById("emailInput")
-          .value;
+        emailInput.value.trim();
+
+      if (!email) {
+        return;
+      }
+
+      /*
+        This confirms that we actually read
+        the current value from the input box.
+      */
 
       showToast(
-        `✓ ${email} added to Weekly Scout`
+        `✓ ${email} subscribed for more`
       );
 
-      document
-        .getElementById("emailInput")
-        .value = "";
+      /*
+        Also visible in browser dev tools
+        for an extra sanity check.
+      */
+
+      console.log(
+        "Captured subscriber email:",
+        email
+      );
+
+      emailInput.value = "";
 
     }
   );
@@ -1356,7 +1369,7 @@ function previewCalendar() {
 
 
 /*
-  PAGE HELPERS
+  HELPERS
 */
 
 function scrollToEmail() {
@@ -1387,7 +1400,7 @@ function showToast(message) {
         .remove("show");
 
     },
-    2600
+    3000
   );
 
 }
@@ -1402,7 +1415,6 @@ renderGames();
 
 
 </script>
-
 
 </body>
 
