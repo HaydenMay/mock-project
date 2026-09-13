@@ -12,7 +12,10 @@
       "homeRecord": "3-1",
       "time": "Saturday • 7:30 PM ET",
       "network": "ABC",
-      "reason": "Two playoff contenders with elite defenses and major conference implications."
+      "reason": "Two playoff contenders with elite defenses and major conference implications.",
+      "whyItMatters": "Both teams are firmly in the playoff conversation and a loss could reshape the conference race.",
+      "playerWatch": "Texas QB vs Georgia's pass rush.",
+      "keyMatchup": "Texas offensive line vs Georgia's front seven."
     },
     {
       "rank": 2,
@@ -24,7 +27,10 @@
       "homeRecord": "4-0",
       "time": "Saturday • 8:00 PM ET",
       "network": "ESPN",
-      "reason": "LSU's offense creates enough volatility to make this one of Scout's strongest upset candidates."
+      "reason": "LSU's offense creates enough volatility to make this one of Scout's strongest upset candidates.",
+      "whyItMatters": "A conference loss here could dramatically change the SEC race.",
+      "playerWatch": "LSU quarterback and Alabama secondary.",
+      "keyMatchup": "LSU deep passing attack vs Alabama coverage."
     }
   ]
 }
