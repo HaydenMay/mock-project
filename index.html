@@ -183,10 +183,6 @@ a {
   letter-spacing:.14em;
 }
 
-.muted {
-  color:var(--muted);
-}
-
 
 /* HERO */
 
@@ -848,12 +844,12 @@ a {
     <div class="hero-copy">
 
       Every week, Scout analyzes the college football slate
-      and selects ten games worth your attention.
+      and selects the games most worth your attention.
 
       Big matchups. Upset potential. Players to watch.
       Rivalries. Playoff implications.
 
-      One list. Every week.
+      One shortlist. Every week.
 
     </div>
 
@@ -861,14 +857,16 @@ a {
 
       <a
         href="#featured"
-        class="primary-btn">
-        See This Week's Featured 10
+        class="primary-btn"
+        id="featuredButton">
+        See This Week's Featured Games
       </a>
 
       <button
         class="secondary-btn"
-        onclick="subscribeCalendar()">
-        Add Featured 10 to Calendar
+        onclick="subscribeCalendar()"
+        id="calendarHeroButton">
+        Add Featured Games to Calendar
       </button>
 
     </div>
@@ -888,8 +886,10 @@ a {
       Loading...
     </div>
 
-    <div class="side-detail">
-      Featured games selected from this week's national slate.
+    <div
+      class="side-detail"
+      id="heroGameCount">
+      Loading featured games...
     </div>
 
 
@@ -946,12 +946,12 @@ a {
     </div>
 
     <div class="step-title">
-      Get the Featured 10
+      Get the Featured Games
     </div>
 
     <div class="step-copy">
-      Ten games worth watching,
-      ranked and explained every week.
+      Scout ranks the games worth watching
+      and explains why each one made the list.
     </div>
 
   </div>
@@ -992,8 +992,8 @@ a {
         LOADING WEEK
       </div>
 
-      <h2>
-        Scout Featured 10
+      <h2 id="featuredHeading">
+        Scout Featured Games
       </h2>
 
     </div>
@@ -1052,8 +1052,8 @@ a {
       WEEKLY SCOUT
     </div>
 
-    <h3>
-      Get the new Featured 10 in your inbox.
+    <h3 id="emailHeading">
+      Get the new Featured Games in your inbox.
     </h3>
 
     <p>
@@ -1099,8 +1099,8 @@ a {
       SCOUT CALENDAR
     </div>
 
-    <h3>
-      Put the Featured 10 on your calendar.
+    <h3 id="calendarHeading">
+      Put the Featured Games on your calendar.
     </h3>
 
     <p>
@@ -1162,8 +1162,6 @@ a {
 
 /*
   DATA STATE
-
-  This is now populated from featured-games.json.
 */
 
 let scoutData = null;
@@ -1244,7 +1242,7 @@ async function loadScoutData() {
 
 
 /*
-  UPDATE PAGE HEADER / METADATA
+  UPDATE PAGE FROM JSON
 */
 
 function updatePageFromScoutData() {
@@ -1258,6 +1256,13 @@ function updatePageFromScoutData() {
   const topGame =
     games[0];
 
+  const gameCount =
+    games.length;
+
+
+  /*
+    WEEK
+  */
 
   document
     .getElementById("heroWeek")
@@ -1270,6 +1275,50 @@ function updatePageFromScoutData() {
     .textContent =
     `WEEK ${week}`;
 
+
+  /*
+    DYNAMIC FEATURED COUNT
+  */
+
+  document
+    .getElementById("heroGameCount")
+    .textContent =
+    `${gameCount} featured ${gameCount === 1 ? "game" : "games"} selected from this week's national slate.`;
+
+
+  document
+    .getElementById("featuredHeading")
+    .textContent =
+    `Scout Featured ${gameCount}`;
+
+
+  document
+    .getElementById("featuredButton")
+    .textContent =
+    `See This Week's Featured ${gameCount}`;
+
+
+  document
+    .getElementById("calendarHeroButton")
+    .textContent =
+    `Add Featured ${gameCount} to Calendar`;
+
+
+  document
+    .getElementById("emailHeading")
+    .textContent =
+    `Get the new Featured ${gameCount} in your inbox.`;
+
+
+  document
+    .getElementById("calendarHeading")
+    .textContent =
+    `Put the Featured ${gameCount} on your calendar.`;
+
+
+  /*
+    TOP GAME
+  */
 
   if (topGame) {
 
@@ -1290,6 +1339,10 @@ function updatePageFromScoutData() {
 
   }
 
+
+  /*
+    LAST UPDATED
+  */
 
   if (generatedAt) {
 
@@ -1447,12 +1500,10 @@ function renderGames() {
         </div>
 
         <div class="analysis-value">
-
           ${
             game.whyItMatters ||
-            "Potential conference, rivalry, ranking, or postseason implications."
+            "Scout analysis coming soon."
           }
-
         </div>
 
       </div>
@@ -1465,12 +1516,10 @@ function renderGames() {
         </div>
 
         <div class="analysis-value">
-
           ${
             game.playerWatch ||
-            "Scout will highlight notable players and prospects here."
+            "Scout analysis coming soon."
           }
-
         </div>
 
       </div>
@@ -1483,12 +1532,10 @@ function renderGames() {
         </div>
 
         <div class="analysis-value">
-
           ${
             game.keyMatchup ||
-            "Scout will surface the matchup most likely to influence the game."
+            "Scout analysis coming soon."
           }
-
         </div>
 
       </div>
@@ -1590,8 +1637,11 @@ document
 
 function subscribeCalendar() {
 
+  const gameCount =
+    games.length;
+
   showToast(
-    "✓ Scout calendar subscription simulated"
+    `✓ Scout Featured ${gameCount} calendar subscription simulated`
   );
 
 }
@@ -1620,15 +1670,21 @@ function previewCalendar() {
       .join("\n");
 
 
-  alert(
-    "Scout Calendar Preview\n\n" +
-    preview +
-    "\n\n…and " +
+  const remaining =
     Math.max(
       games.length - 3,
       0
-    ) +
-    " more Featured games."
+    );
+
+
+  alert(
+    "Scout Calendar Preview\n\n" +
+    preview +
+    (
+      remaining > 0
+        ? `\n\n…and ${remaining} more Featured ${remaining === 1 ? "game" : "games"}.`
+        : ""
+    )
   );
 
 }
