@@ -864,7 +864,7 @@ a {
 
       <button
         class="secondary-btn"
-        onclick="subscribeCalendar()"
+        onclick="downloadScoutCalendar()"
         id="calendarHeroButton">
         Add Featured Games to Calendar
       </button>
@@ -1103,14 +1103,14 @@ a {
       Put the Featured Games on your calendar.
     </h3>
 
-    <p>
-      Subscribe once and Saturday Scout keeps
-      the weekly featured games updated for you.
-    </p>
+   <p>
+  Download this week's Scout games and add them
+  to Apple Calendar, Google Calendar, Outlook, or another calendar app.
+</p>
 
-    <p class="calendar-note">
-      Calendar subscription is still simulated in this prototype.
-    </p>
+<p class="calendar-note">
+  Automatic calendar subscriptions are coming later.
+</p>
 
     <div class="free-label">
       ✓ Included free
@@ -1122,10 +1122,10 @@ a {
   <div class="calendar-actions">
 
     <button
-      class="primary-btn"
-      onclick="subscribeCalendar()">
-      Subscribe to Scout Calendar
-    </button>
+  class="primary-btn"
+  onclick="downloadScoutCalendar()">
+  Add Featured Games to Calendar
+</button>
 
     <button
       class="secondary-btn"
@@ -1178,7 +1178,208 @@ const gamesEl =
 const toast =
   document.getElementById("toast");
 
+/*
+  REAL .ICS CALENDAR GENERATION
+*/
 
+function downloadScoutCalendar() {
+
+  if (!games.length) {
+    showToast("Scout games are still loading");
+    return;
+  }
+
+  const calendarGames =
+    games.filter(game => game.kickoff);
+
+  if (!calendarGames.length) {
+    showToast("No games have calendar kickoff data yet");
+    return;
+  }
+
+  const now =
+    formatICSDate(new Date());
+
+  const events =
+    calendarGames.map((game, index) => {
+
+      const start =
+        new Date(game.kickoff);
+
+      /*
+        Give each game a default 4-hour calendar block.
+        This can be improved later.
+      */
+
+      const end =
+        new Date(
+          start.getTime() +
+          (4 * 60 * 60 * 1000)
+        );
+
+      const title =
+        `${game.away} vs ${game.home}`;
+
+      const description = [
+        `Scout #${game.rank || index + 1}`,
+        game.tag || "",
+        "",
+        game.reason
+          ? `Why Scout picked it: ${game.reason}`
+          : "",
+        game.whyItMatters
+          ? `Why it matters: ${game.whyItMatters}`
+          : "",
+        game.playerWatch
+          ? `Player watch: ${game.playerWatch}`
+          : "",
+        game.keyMatchup
+          ? `Key matchup: ${game.keyMatchup}`
+          : "",
+        game.network
+          ? `Watch: ${game.network}`
+          : ""
+      ]
+      .filter(Boolean)
+      .join("\\n");
+
+      const uid =
+        `saturday-scout-week-${scoutData.week}-game-${game.rank || index + 1}@saturdayscout`;
+
+      return [
+        "BEGIN:VEVENT",
+        `UID:${uid}`,
+        `DTSTAMP:${now}`,
+        `DTSTART:${formatICSDate(start)}`,
+        `DTEND:${formatICSDate(end)}`,
+        `SUMMARY:${escapeICSText(title)}`,
+        `DESCRIPTION:${escapeICSText(description)}`,
+        "END:VEVENT"
+      ].join("\r\n");
+
+    })
+    .join("\r\n");
+
+
+  const calendar = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Saturday Scout//Featured Games//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    `X-WR-CALNAME:Saturday Scout Week ${scoutData.week}`,
+    events,
+    "END:VCALENDAR"
+  ].join("\r\n");
+
+
+  const blob =
+    new Blob(
+      [calendar],
+      {
+        type:
+          "text/calendar;charset=utf-8"
+      }
+    );
+
+
+  const url =
+    URL.createObjectURL(blob);
+
+  const link =
+    document.createElement("a");
+
+  link.href = url;
+
+  link.download =
+    `saturday-scout-week-${scoutData.week}.ics`;
+
+  document.body.appendChild(link);
+
+  link.click();
+
+  document.body.removeChild(link);
+
+  URL.revokeObjectURL(url);
+
+
+  showToast(
+    `✓ Featured ${calendarGames.length} calendar created`
+  );
+
+}
+
+
+/*
+  ICS HELPERS
+*/
+
+function formatICSDate(date) {
+
+  return date
+    .toISOString()
+    .replace(/[-:]/g, "")
+    .replace(/\.\d{3}/, "");
+
+}
+
+
+function escapeICSText(value) {
+
+  return String(value || "")
+    .replace(/\\/g, "\\\\")
+    .replace(/\n/g, "\\n")
+    .replace(/,/g, "\\,")
+    .replace(/;/g, "\\;");
+
+}
+
+
+/*
+  CALENDAR PREVIEW
+*/
+
+function previewCalendar() {
+
+  if (!games.length) {
+
+    showToast(
+      "Scout games are still loading"
+    );
+
+    return;
+
+  }
+
+  const preview =
+    games
+      .map(game => {
+
+        const kickoff =
+          game.kickoff
+            ? new Date(game.kickoff)
+                .toLocaleString()
+            : "Kickoff unavailable";
+
+        return (
+          `${game.away} vs ${game.home}` +
+          `\n${kickoff}` +
+          (
+            game.network
+              ? ` • ${game.network}`
+              : ""
+          )
+        );
+
+      })
+      .join("\n\n");
+
+
+  alert(
+    `Saturday Scout Week ${scoutData.week}\n\n${preview}`
+  );
+
+}
 
 /*
   LOAD SCOUT JSON
