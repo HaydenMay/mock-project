@@ -1197,69 +1197,60 @@ function downloadScoutCalendar() {
     return;
   }
 
-  const now =
-    formatICSDate(new Date());
+  const now = formatICSDate(new Date());
 
-  const events =
-    calendarGames.map((game, index) => {
+  const events = calendarGames.map((game, index) => {
 
-      const start =
-        new Date(game.kickoff);
+    const start = new Date(game.kickoff);
 
-      /*
-        Give each game a default 4-hour calendar block.
-        This can be improved later.
-      */
+    const end = new Date(
+      start.getTime() + (4 * 60 * 60 * 1000)
+    );
 
-      const end =
-        new Date(
-          start.getTime() +
-          (4 * 60 * 60 * 1000)
-        );
+    const title =
+      `${game.away} vs ${game.home}`;
 
-      const title =
-        `${game.away} vs ${game.home}`;
+    const descriptionLines = [
+      `Scout #${game.rank || index + 1}`,
+      game.tag || "",
+      "",
+      game.reason
+        ? `Why Scout picked it: ${game.reason}`
+        : "",
+      game.whyItMatters
+        ? `Why it matters: ${game.whyItMatters}`
+        : "",
+      game.playerWatch
+        ? `Player watch: ${game.playerWatch}`
+        : "",
+      game.keyMatchup
+        ? `Key matchup: ${game.keyMatchup}`
+        : "",
+      game.network
+        ? `Watch: ${game.network}`
+        : ""
+    ].filter(line => line !== "");
 
-      const description = [
-        `Scout #${game.rank || index + 1}`,
-        game.tag || "",
-        "",
-        game.reason
-          ? `Why Scout picked it: ${game.reason}`
-          : "",
-        game.whyItMatters
-          ? `Why it matters: ${game.whyItMatters}`
-          : "",
-        game.playerWatch
-          ? `Player watch: ${game.playerWatch}`
-          : "",
-        game.keyMatchup
-          ? `Key matchup: ${game.keyMatchup}`
-          : "",
-        game.network
-          ? `Watch: ${game.network}`
-          : ""
-      ]
-      .filter(Boolean)
-      .join("\\n");
+    const description =
+      descriptionLines.join("\n");
 
-      const uid =
-        `saturday-scout-week-${scoutData.week}-game-${game.rank || index + 1}@saturdayscout`;
+    const uid =
+      `week-${scoutData.week}-game-${game.rank || index + 1}@saturdayscout.app`;
 
-      return [
-        "BEGIN:VEVENT",
-        `UID:${uid}`,
-        `DTSTAMP:${now}`,
-        `DTSTART:${formatICSDate(start)}`,
-        `DTEND:${formatICSDate(end)}`,
-        `SUMMARY:${escapeICSText(title)}`,
-        `DESCRIPTION:${escapeICSText(description)}`,
-        "END:VEVENT"
-      ].join("\r\n");
+    return [
+      "BEGIN:VEVENT",
+      `UID:${uid}`,
+      `DTSTAMP:${now}`,
+      `DTSTART:${formatICSDate(start)}`,
+      `DTEND:${formatICSDate(end)}`,
+      `SUMMARY:${escapeICSText(title)}`,
+      `DESCRIPTION:${escapeICSText(description)}`,
+      "STATUS:CONFIRMED",
+      "TRANSP:OPAQUE",
+      "END:VEVENT"
+    ].join("\r\n");
 
-    })
-    .join("\r\n");
-
+  }).join("\r\n");
 
   const calendar = [
     "BEGIN:VCALENDAR",
@@ -1269,28 +1260,22 @@ function downloadScoutCalendar() {
     "METHOD:PUBLISH",
     `X-WR-CALNAME:Saturday Scout Week ${scoutData.week}`,
     events,
-    "END:VCALENDAR"
+    "END:VCALENDAR",
+    ""
   ].join("\r\n");
 
+  const blob = new Blob(
+    [calendar],
+    {
+      type: "text/calendar;charset=utf-8"
+    }
+  );
 
-  const blob =
-    new Blob(
-      [calendar],
-      {
-        type:
-          "text/calendar;charset=utf-8"
-      }
-    );
+  const url = URL.createObjectURL(blob);
 
-
-  const url =
-    URL.createObjectURL(blob);
-
-  const link =
-    document.createElement("a");
+  const link = document.createElement("a");
 
   link.href = url;
-
   link.download =
     `saturday-scout-week-${scoutData.week}.ics`;
 
@@ -1300,12 +1285,33 @@ function downloadScoutCalendar() {
 
   document.body.removeChild(link);
 
-  URL.revokeObjectURL(url);
-
+  setTimeout(() => {
+    URL.revokeObjectURL(url);
+  }, 1000);
 
   showToast(
     `✓ Featured ${calendarGames.length} calendar created`
   );
+}
+
+
+function formatICSDate(date) {
+
+  return date
+    .toISOString()
+    .replace(/[-:]/g, "")
+    .replace(/\.\d{3}/, "");
+
+}
+
+
+function escapeICSText(value) {
+
+  return String(value || "")
+    .replace(/\\/g, "\\\\")
+    .replace(/\r?\n/g, "\\n")
+    .replace(/;/g, "\\;")
+    .replace(/,/g, "\\,");
 
 }
 
