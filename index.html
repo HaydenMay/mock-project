@@ -1831,67 +1831,6 @@ document
   );
 
 
-
-/*
-  MOCK CALENDAR
-*/
-
-function subscribeCalendar() {
-
-  const gameCount =
-    games.length;
-
-  showToast(
-    `✓ Scout Featured ${gameCount} calendar subscription simulated`
-  );
-
-}
-
-
-function previewCalendar() {
-
-  if (!games.length) {
-
-    showToast(
-      "Scout games are still loading"
-    );
-
-    return;
-
-  }
-
-
-  const preview =
-    games
-      .slice(0,3)
-      .map(
-        game =>
-          `${game.away} vs ${game.home}`
-      )
-      .join("\n");
-
-
-  const remaining =
-    Math.max(
-      games.length - 3,
-      0
-    );
-
-
-  alert(
-    "Scout Calendar Preview\n\n" +
-    preview +
-    (
-      remaining > 0
-        ? `\n\n…and ${remaining} more Featured ${remaining === 1 ? "game" : "games"}.`
-        : ""
-    )
-  );
-
-}
-
-
-
 /*
   HELPERS
 */
