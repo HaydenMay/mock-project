@@ -1,0 +1,30 @@
+{
+  "week": 5,
+  "generatedAt": "2026-09-12T18:00:00Z",
+  "featuredGames": [
+    {
+      "rank": 1,
+      "tag": "Game of the Week",
+      "gold": true,
+      "away": "#4 Texas",
+      "awayRecord": "4-0",
+      "home": "#7 Georgia",
+      "homeRecord": "3-1",
+      "time": "Saturday • 7:30 PM ET",
+      "network": "ABC",
+      "reason": "Two playoff contenders with elite defenses and major conference implications."
+    },
+    {
+      "rank": 2,
+      "tag": "Upset Watch",
+      "gold": false,
+      "away": "#12 Alabama",
+      "awayRecord": "3-1",
+      "home": "LSU",
+      "homeRecord": "4-0",
+      "time": "Saturday • 8:00 PM ET",
+      "network": "ESPN",
+      "reason": "LSU's offense creates enough volatility to make this one of Scout's strongest upset candidates."
+    }
+  ]
+}
