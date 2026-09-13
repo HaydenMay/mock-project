@@ -22,6 +22,7 @@
 
   --gold:#F4B942;
   --success:#4FD18B;
+  --danger:#FF6B6B;
 }
 
 * {
@@ -319,6 +320,50 @@ a {
 }
 
 
+/* STATUS */
+
+.status-card {
+  margin-bottom:14px;
+  padding:14px 18px;
+
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  align-items:center;
+}
+
+.status-left {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.status-dot {
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:var(--success);
+
+  box-shadow:
+    0 0 12px
+    rgba(79,209,139,.55);
+}
+
+.status-text {
+  font-size:13px;
+  color:var(--muted);
+}
+
+.status-text strong {
+  color:var(--text);
+}
+
+.last-updated {
+  font-size:12px;
+  color:var(--muted);
+}
+
+
 /* FEATURED GAMES */
 
 .games {
@@ -420,6 +465,85 @@ a {
 
 .reason strong {
   color:var(--gold);
+}
+
+
+/* EXPANDABLE ANALYSIS */
+
+.analysis-toggle {
+  margin-top:14px;
+
+  border:0;
+  background:transparent;
+  color:var(--primary);
+
+  padding:0;
+
+  cursor:pointer;
+
+  font-weight:850;
+  font-size:13px;
+}
+
+.analysis-toggle:hover {
+  text-decoration:underline;
+}
+
+.analysis {
+  display:none;
+
+  margin-top:14px;
+  padding-top:14px;
+
+  border-top:1px solid var(--line);
+}
+
+.analysis.open {
+  display:block;
+}
+
+.analysis-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.analysis-item {
+  background:#0E1526;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px;
+}
+
+.analysis-label {
+  color:var(--primary);
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.08em;
+  margin-bottom:5px;
+}
+
+.analysis-value {
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.4;
+}
+
+
+/* LOADING / ERROR */
+
+.loading,
+.error {
+  padding:26px;
+  text-align:center;
+}
+
+.loading {
+  color:var(--muted);
+}
+
+.error {
+  color:var(--danger);
 }
 
 
@@ -594,6 +718,15 @@ a {
     text-align:left;
   }
 
+  .status-card {
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .analysis-grid {
+    grid-template-columns:1fr;
+  }
+
   .email-card {
     grid-template-columns:1fr;
   }
@@ -749,12 +882,14 @@ a {
       CURRENT SCOUT
     </div>
 
-    <div class="side-big">
-      Week 5
+    <div
+      class="side-big"
+      id="heroWeek">
+      Loading...
     </div>
 
     <div class="side-detail">
-      10 featured games selected from this week's national slate.
+      Featured games selected from this week's national slate.
     </div>
 
 
@@ -765,13 +900,15 @@ a {
       SCOUT'S #1 GAME
     </div>
 
-    <div class="side-big">
-      #4 Texas vs #7 Georgia
+    <div
+      class="side-big"
+      id="heroTopGame">
+      Loading...
     </div>
 
-    <div class="side-detail">
-      Saturday • 7:30 PM ET<br>
-      Game of the Week
+    <div
+      class="side-detail"
+      id="heroTopGameDetails">
     </div>
 
   </div>
@@ -849,8 +986,10 @@ a {
 
     <div>
 
-      <div class="eyebrow">
-        WEEK 5
+      <div
+        class="eyebrow"
+        id="weekLabel">
+        LOADING WEEK
       </div>
 
       <h2>
@@ -860,8 +999,28 @@ a {
     </div>
 
     <div class="section-copy">
-      Mock data for the prototype.
-      Eventually this list will be produced from the real Scout pipeline.
+      Scout's weekly shortlist of the games most worth your attention.
+    </div>
+
+  </div>
+
+
+  <div class="card status-card">
+
+    <div class="status-left">
+
+      <div class="status-dot"></div>
+
+      <div class="status-text">
+        <strong>Scout slate active</strong>
+      </div>
+
+    </div>
+
+    <div
+      class="last-updated"
+      id="lastUpdated">
+      Loading latest update...
     </div>
 
   </div>
@@ -870,6 +1029,11 @@ a {
   <div
     class="games"
     id="games">
+
+    <div class="card loading">
+      Loading Scout data...
+    </div>
+
   </div>
 
 </section>
@@ -945,7 +1109,7 @@ a {
     </p>
 
     <p class="calendar-note">
-      Prototype buttons below simulate the calendar experience.
+      Calendar subscription is still simulated in this prototype.
     </p>
 
     <div class="free-label">
@@ -976,7 +1140,7 @@ a {
 
 
 <div class="footer">
-  Saturday Scout prototype • Phase 1A • Mock sports data
+  Saturday Scout • College football, curated
 </div>
 
 
@@ -997,190 +1161,165 @@ a {
 
 
 /*
-  MOCK WEEKLY SCOUT DATA
+  DATA STATE
+
+  This is now populated from featured-games.json.
 */
 
-const games = [
+let scoutData = null;
+let games = [];
 
-  {
-    rank:1,
-    tag:"Game of the Week",
-    gold:true,
 
-    away:"#4 Texas",
-    awayRecord:"4–0",
-
-    home:"#7 Georgia",
-    homeRecord:"3–1",
-
-    time:"Saturday • 7:30 PM ET",
-    network:"ABC",
-
-    reason:
-      "Two playoff contenders with elite defenses and major conference implications."
-  },
-
-  {
-    rank:2,
-    tag:"Upset Watch",
-
-    away:"#12 Alabama",
-    awayRecord:"3–1",
-
-    home:"LSU",
-    homeRecord:"4–0",
-
-    time:"Saturday • 8:00 PM ET",
-    network:"ESPN",
-
-    reason:
-      "LSU's offense creates enough volatility to make this one of Scout's strongest upset candidates."
-  },
-
-  {
-    rank:3,
-    tag:"Player Watch",
-
-    away:"Arizona State",
-    awayRecord:"3–1",
-
-    home:"#10 Texas A&M",
-    homeRecord:"4–0",
-
-    time:"Saturday • 3:30 PM ET",
-    network:"FOX",
-
-    reason:
-      "Multiple NFL-caliber prospects make this one of the best talent-evaluation games of the week."
-  },
-
-  {
-    rank:4,
-    tag:"Rivalry",
-
-    away:"Iowa State",
-    awayRecord:"3–1",
-
-    home:"Iowa",
-    homeRecord:"3–1",
-
-    time:"Saturday • 12:00 PM ET",
-    network:"CBS",
-
-    reason:
-      "A rivalry matchup with similar records and a history of turning into a fourth-quarter fight."
-  },
-
-  {
-    rank:5,
-    tag:"Featured",
-
-    away:"#18 Michigan",
-    awayRecord:"3–1",
-
-    home:"Wisconsin",
-    homeRecord:"3–1",
-
-    time:"Saturday • 4:00 PM ET",
-    network:"NBC",
-
-    reason:
-      "Two physical teams with similar strengths and very little separation on paper."
-  },
-
-  {
-    rank:6,
-    tag:"Upset Watch",
-
-    away:"#21 Oregon",
-    awayRecord:"4–0",
-
-    home:"USC",
-    homeRecord:"3–1",
-
-    time:"Saturday • 10:30 PM ET",
-    network:"FOX",
-
-    reason:
-      "USC's explosive offense gives the underdog a realistic path to changing this game quickly."
-  },
-
-  {
-    rank:7,
-    tag:"Featured",
-
-    away:"Utah",
-    awayRecord:"3–1",
-
-    home:"#15 Kansas State",
-    homeRecord:"4–0",
-
-    time:"Saturday • 7:00 PM ET",
-    network:"ESPN2",
-
-    reason:
-      "A disciplined matchup featuring two very different offensive identities."
-  },
-
-  {
-    rank:8,
-    tag:"Player Watch",
-
-    away:"Clemson",
-    awayRecord:"2–2",
-
-    home:"#17 Miami",
-    homeRecord:"4–0",
-
-    time:"Saturday • 3:30 PM ET",
-    network:"ABC",
-
-    reason:
-      "Several draft-watch players and an intriguing secondary-versus-receiver matchup."
-  },
-
-  {
-    rank:9,
-    tag:"Conference",
-
-    away:"TCU",
-    awayRecord:"3–1",
-
-    home:"Baylor",
-    homeRecord:"3–1",
-
-    time:"Saturday • 6:00 PM ET",
-    network:"FS1",
-
-    reason:
-      "A competitive conference game where neither team has a clear statistical edge."
-  },
-
-  {
-    rank:10,
-    tag:"Late Window",
-
-    away:"Washington",
-    awayRecord:"3–1",
-
-    home:"UCLA",
-    homeRecord:"2–2",
-
-    time:"Saturday • 10:30 PM ET",
-    network:"ESPN",
-
-    reason:
-      "Scout's best late-window option for anyone looking to close out Saturday with one more game."
-  }
-
-];
-
+/*
+  PAGE ELEMENTS
+*/
 
 const gamesEl =
   document.getElementById("games");
 
 const toast =
   document.getElementById("toast");
+
+
+
+/*
+  LOAD SCOUT JSON
+*/
+
+async function loadScoutData() {
+
+  try {
+
+    const response =
+      await fetch("./featured-games.json");
+
+    if (!response.ok) {
+      throw new Error(
+        `HTTP ${response.status}`
+      );
+    }
+
+    scoutData =
+      await response.json();
+
+    games =
+      scoutData.featuredGames || [];
+
+    if (!games.length) {
+      throw new Error(
+        "No featured games found in JSON"
+      );
+    }
+
+    updatePageFromScoutData();
+
+    renderGames();
+
+  } catch (error) {
+
+    console.error(
+      "Scout data load failed:",
+      error
+    );
+
+    gamesEl.innerHTML = `
+
+      <div class="card error">
+
+        Could not load featured-games.json.
+
+        <br><br>
+
+        Make sure the file is in the same folder
+        as index.html and is valid JSON.
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+
+/*
+  UPDATE PAGE HEADER / METADATA
+*/
+
+function updatePageFromScoutData() {
+
+  const week =
+    scoutData.week ?? "?";
+
+  const generatedAt =
+    scoutData.generatedAt;
+
+  const topGame =
+    games[0];
+
+
+  document
+    .getElementById("heroWeek")
+    .textContent =
+    `Week ${week}`;
+
+
+  document
+    .getElementById("weekLabel")
+    .textContent =
+    `WEEK ${week}`;
+
+
+  if (topGame) {
+
+    document
+      .getElementById("heroTopGame")
+      .textContent =
+      `${topGame.away} vs ${topGame.home}`;
+
+
+    document
+      .getElementById("heroTopGameDetails")
+      .innerHTML =
+      `
+        ${topGame.time || ""}
+        ${topGame.time ? "<br>" : ""}
+        ${topGame.tag || ""}
+      `;
+
+  }
+
+
+  if (generatedAt) {
+
+    const date =
+      new Date(generatedAt);
+
+    const formatted =
+      date.toLocaleString(
+        undefined,
+        {
+          dateStyle:"medium",
+          timeStyle:"short"
+        }
+      );
+
+    document
+      .getElementById("lastUpdated")
+      .textContent =
+      `Last updated ${formatted}`;
+
+  } else {
+
+    document
+      .getElementById("lastUpdated")
+      .textContent =
+      "Update time unavailable";
+
+  }
+
+}
 
 
 
@@ -1192,21 +1331,22 @@ function renderGames() {
 
   gamesEl.innerHTML =
 
-    games.map(game => `
+    games.map(
+      (game,index) => `
 
 <section class="card game">
 
   <div class="game-top">
 
     <div class="scout-rank">
-      SCOUT #${game.rank}
+      SCOUT #${game.rank ?? index + 1}
     </div>
 
     <div class="
       badge
       ${game.gold ? "gold" : ""}
     ">
-      ${game.tag}
+      ${game.tag || "Featured"}
     </div>
 
   </div>
@@ -1225,7 +1365,7 @@ function renderGames() {
       </div>
 
       <div class="team-record">
-        ${game.awayRecord}
+        ${game.awayRecord || ""}
       </div>
 
     </div>
@@ -1247,7 +1387,7 @@ function renderGames() {
       </div>
 
       <div class="team-record">
-        ${game.homeRecord}
+        ${game.homeRecord || ""}
       </div>
 
     </div>
@@ -1257,13 +1397,17 @@ function renderGames() {
 
   <div class="game-meta">
 
-    <span>
-      🗓 ${game.time}
-    </span>
+    ${
+      game.time
+        ? `<span>🗓 ${game.time}</span>`
+        : ""
+    }
 
-    <span>
-      📺 ${game.network}
-    </span>
+    ${
+      game.network
+        ? `<span>📺 ${game.network}</span>`
+        : ""
+    }
 
   </div>
 
@@ -1274,13 +1418,125 @@ function renderGames() {
       WHY SCOUT PICKED IT:
     </strong>
 
-    ${game.reason}
+    ${game.reason || "Scout analysis coming soon."}
+
+  </div>
+
+
+  <button
+    class="analysis-toggle"
+    onclick="toggleAnalysis(${index})"
+    id="analysisButton-${index}">
+
+    More Scout Analysis
+
+  </button>
+
+
+  <div
+    class="analysis"
+    id="analysis-${index}">
+
+    <div class="analysis-grid">
+
+
+      <div class="analysis-item">
+
+        <div class="analysis-label">
+          WHY IT MATTERS
+        </div>
+
+        <div class="analysis-value">
+
+          ${
+            game.whyItMatters ||
+            "Potential conference, rivalry, ranking, or postseason implications."
+          }
+
+        </div>
+
+      </div>
+
+
+      <div class="analysis-item">
+
+        <div class="analysis-label">
+          PLAYER WATCH
+        </div>
+
+        <div class="analysis-value">
+
+          ${
+            game.playerWatch ||
+            "Scout will highlight notable players and prospects here."
+          }
+
+        </div>
+
+      </div>
+
+
+      <div class="analysis-item">
+
+        <div class="analysis-label">
+          KEY MATCHUP
+        </div>
+
+        <div class="analysis-value">
+
+          ${
+            game.keyMatchup ||
+            "Scout will surface the matchup most likely to influence the game."
+          }
+
+        </div>
+
+      </div>
+
+
+    </div>
 
   </div>
 
 </section>
 
-    `).join("");
+      `
+    )
+    .join("");
+
+}
+
+
+
+/*
+  EXPAND / COLLAPSE ANALYSIS
+*/
+
+function toggleAnalysis(index) {
+
+  const panel =
+    document.getElementById(
+      `analysis-${index}`
+    );
+
+  const button =
+    document.getElementById(
+      `analysisButton-${index}`
+    );
+
+  const isOpen =
+    panel.classList.contains("open");
+
+
+  panel
+    .classList
+    .toggle("open");
+
+
+  button.textContent =
+    isOpen
+      ? "More Scout Analysis"
+      : "Hide Scout Analysis";
 
 }
 
@@ -1299,28 +1555,22 @@ document
       event.preventDefault();
 
       const emailInput =
-        document.getElementById("emailInput");
+        document.getElementById(
+          "emailInput"
+        );
 
       const email =
-        emailInput.value.trim();
+        emailInput
+          .value
+          .trim();
 
       if (!email) {
         return;
       }
 
-      /*
-        This confirms that we actually read
-        the current value from the input box.
-      */
-
       showToast(
         `✓ ${email} subscribed for more`
       );
-
-      /*
-        Also visible in browser dev tools
-        for an extra sanity check.
-      */
 
       console.log(
         "Captured subscriber email:",
@@ -1349,6 +1599,17 @@ function subscribeCalendar() {
 
 function previewCalendar() {
 
+  if (!games.length) {
+
+    showToast(
+      "Scout games are still loading"
+    );
+
+    return;
+
+  }
+
+
   const preview =
     games
       .slice(0,3)
@@ -1358,10 +1619,16 @@ function previewCalendar() {
       )
       .join("\n");
 
+
   alert(
     "Scout Calendar Preview\n\n" +
     preview +
-    "\n\n…and 7 more Featured games."
+    "\n\n…and " +
+    Math.max(
+      games.length - 3,
+      0
+    ) +
+    " more Featured games."
   );
 
 }
@@ -1411,7 +1678,7 @@ function showToast(message) {
   INITIAL LOAD
 */
 
-renderGames();
+loadScoutData();
 
 
 </script>
